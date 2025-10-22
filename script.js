@@ -1,44 +1,17 @@
 // Internet Media Art - UnderIM
 // Comments that pop up on screen
 const comments = [
-    { text: "First!", type: "spam" },
-    { text: "This is so true!", type: "positive" },
-    { text: "You're wrong about everything", type: "negative" },
-    { text: "Who's watching in 2025?", type: "spam" },
-    { text: "SUBSCRIBE TO MY CHANNEL", type: "spam" },
-    { text: "This changed my life", type: "positive" },
-    { text: "Stop spreading misinformation!", type: "negative" },
-    { text: "Can someone explain?", type: "neutral" },
-    { text: "I'm not reading all that", type: "negative" },
-    { text: "Amazing content!", type: "positive" },
-    { text: "This is literally me", type: "neutral" },
-    { text: "Delete your account", type: "negative" },
-    { text: "💀💀💀", type: "neutral" },
-    { text: "Why am I here?", type: "neutral" },
-    { text: "BUY CRYPTO NOW", type: "spam" },
-    { text: "My grandmother could do better", type: "negative" },
-    { text: "This deserves more views", type: "positive" },
-    { text: "CLICKBAIT!", type: "negative" },
-    { text: "Source?", type: "neutral" },
-    { text: "Not even funny", type: "negative" },
-    { text: "I can't stop watching", type: "positive" },
-    { text: "This is the 10th time I'm watching this", type: "positive" },
-    { text: "Skip to 5:23 for the good part", type: "neutral" },
-    { text: "Nobody asked", type: "negative" },
-    { text: "Touch grass", type: "negative" },
-    { text: "I'm literally crying rn", type: "positive" },
-    { text: "CHECK OUT MY CHANNEL FOR FREE IPHONE", type: "spam" },
-    { text: "The algorithm brought me here", type: "neutral" },
-    { text: "This aged like milk", type: "negative" },
-    { text: "This aged like wine", type: "positive" },
-    { text: "Who else is procrastinating?", type: "neutral" },
-    { text: "I should be studying", type: "neutral" },
-    { text: "My parents are fighting in the background", type: "neutral" },
-    { text: "Ratio", type: "spam" },
-    { text: "L + Ratio", type: "spam" },
-    { text: "W video", type: "positive" },
-    { text: "Take this down immediately", type: "negative" },
-    { text: "Pin me please!", type: "spam" }
+    { text: "bro I'm watching this at 3am eating cereal", type: "neutral" },
+    { text: "the comments section is a whole movie 😭", type: "positive" },
+    { text: "why is no one talking about the chair???", type: "neutral" },
+    { text: "this unlocked a core memory I didn't know I had", type: "positive" },
+    { text: "I can't tell if this is genius or cursed", type: "neutral" },
+    { text: "the way I paused at the exact moment the cat blinked 😭", type: "positive" },
+    { text: "this video feels like a dream I had once", type: "neutral" },
+    { text: "help I'm crying but I don't know why", type: "positive" },
+    { text: "bro dropped this and disappeared like it's ancient prophecy", type: "positive" },
+    { text: "this comment section has no laws", type: "neutral" },
+    { text: "literally crying and throwing up rn", type: "positive" }
 ];
 
 // Interruption messages
@@ -232,9 +205,13 @@ function executePopupComment() {
     popup.className = `popup-comment ${comment.type}`;
     popup.textContent = comment.text;
     
-    // Random position
-    const x = Math.random() * (window.innerWidth - 320) + 10;
-    const y = Math.random() * (window.innerHeight - 100) + 10;
+    // Get video wrapper dimensions to constrain comments to video area
+    const videoWrapper = document.querySelector('.video-wrapper');
+    const rect = videoWrapper.getBoundingClientRect();
+    
+    // Random position ONLY within the video area
+    const x = rect.left + Math.random() * (rect.width - 420);
+    const y = rect.top + Math.random() * (rect.height - 100);
     
     popup.style.left = `${x}px`;
     popup.style.top = `${y}px`;
@@ -243,6 +220,9 @@ function executePopupComment() {
     
     // Ring bell
     animateBell();
+    
+    // SPEAK THE COMMENT with varied voice
+    speakComment(comment.text, comment.type);
     
     // PAUSE THE CONTENT when comment appears
     pauseContent();
@@ -322,6 +302,45 @@ function speakText(text) {
     }
 }
 
+// Speak comments with characteristics based on type
+function speakComment(text, type) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        
+        // Adjust voice characteristics based on comment type
+        switch(type) {
+            case 'positive':
+                utterance.rate = 1.1;
+                utterance.pitch = 1.3; // Higher, enthusiastic
+                utterance.volume = 0.9;
+                break;
+            case 'negative':
+                utterance.rate = 1.0;
+                utterance.pitch = 0.7; // Lower, aggressive
+                utterance.volume = 1.0;
+                break;
+            case 'spam':
+                utterance.rate = 1.5; // Fast, annoying
+                utterance.pitch = 1.4; // Very high
+                utterance.volume = 1.0;
+                break;
+            case 'neutral':
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0; // Normal
+                utterance.volume = 0.8;
+                break;
+        }
+        
+        // Try to get different voices for variety
+        const voices = speechSynthesis.getVoices();
+        if (voices.length > 0) {
+            utterance.voice = voices[Math.floor(Math.random() * Math.min(8, voices.length))];
+        }
+        
+        speechSynthesis.speak(utterance);
+    }
+}
+
 // Random voice interruptions
 function createVoiceInterruption() {
     // If already interrupting, add to queue
@@ -374,38 +393,17 @@ function executeVoiceInterruption() {
 
 // Start all the chaos
 function startCommentPopups() {
-    // Start the pattern: 3 comments, then big interruption
-    let commentCount = 0;
-    
     // First comment after a brief delay
-    setTimeout(() => {
-        startCommentCycle();
-    }, 2000);
+    setTimeout(() => createPopupComment(), 2000);
     
-    function startCommentCycle() {
-        // Add 3 comments
-        for (let i = 0; i < 3; i++) {
-            setTimeout(() => {
-                createPopupComment();
-            }, i * 3500); // 3.5 seconds apart (3 sec display + 0.5 sec buffer)
-        }
-        
-        // Then add a big interruption after the 3 comments
-        setTimeout(() => {
-            createInterruption();
-        }, 3 * 3500);
-        
-        // Repeat the whole cycle
-        setTimeout(() => {
-            startCommentCycle();
-        }, 3 * 3500 + 7500); // After 3 comments (10.5s) + long interruption (7s) = 17.5s per cycle
-    }
+    // Continuous comments with nice spacing
+    commentInterval = setInterval(() => {
+        createPopupComment();
+    }, 3500); // One comment every 3.5 seconds (3s display + 0.5s speaking/buffer)
 }
 
 function startInterruptions() {
-    // Interruptions are now controlled by the comment cycle
-    // This function is kept for compatibility but does nothing
-    // The big interruptions happen automatically after every 3 comments
+    // No big interruptions - just smooth comment flow
 }
 
 function startVoiceInterruptions() {
@@ -416,8 +414,7 @@ function startVoiceInterruptions() {
         };
     }
     
-    // Voice interruptions are disabled to maintain the 3-comment pattern
-    // They're only used when speaking the big interruption messages
+    // No separate voice interruptions - comments have sound now
 }
 
 // Animate bell notification
@@ -459,17 +456,29 @@ function executeCelebrationComment() {
     const popup = document.createElement('div');
     popup.className = 'popup-comment positive';
     popup.textContent = '🎉 NEW SUBSCRIBER! 🎉';
-    popup.style.left = `${Math.random() * (window.innerWidth - 320)}px`;
-    popup.style.top = `${Math.random() * (window.innerHeight - 100)}px`;
+    
+    // Get video wrapper dimensions to constrain to video area
+    const videoWrapper = document.querySelector('.video-wrapper');
+    const rect = videoWrapper.getBoundingClientRect();
+    
+    // Random position within video area
+    popup.style.left = `${rect.left + Math.random() * (rect.width - 420)}px`;
+    popup.style.top = `${rect.top + Math.random() * (rect.height - 100)}px`;
+    
     container.appendChild(popup);
     
     // Pause for celebration comment
     pauseContent();
     
-    // Speak only on first celebration
-    if (Math.random() > 0.8) {
-        speakText('Thank you for subscribing!');
-    }
+    // Speak the celebration with enthusiasm!
+    const celebrations = [
+        'New subscriber!',
+        'Thank you for subscribing!',
+        'Welcome to the family!',
+        'You just subscribed!',
+        'Awesome!'
+    ];
+    speakComment(celebrations[Math.floor(Math.random() * celebrations.length)], 'positive');
     
     setTimeout(() => {
         popup.remove();
