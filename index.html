@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UnderIM - Internet Media Art</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- YouTube-style interface -->
+        <div class="video-container">
+            <div class="video-wrapper">
+                <video id="mainVideo" autoplay muted loop playsinline>
+                    <!-- Placeholder - you can replace with actual video -->
+                    <source src="video.mp4" type="video/mp4">
+                </video>
+                
+                <!-- Animated face placeholder when no video -->
+                <div class="video-placeholder">
+                    <div class="face">
+                        <div class="eyes">
+                            <div class="eye left"></div>
+                            <div class="eye right"></div>
+                        </div>
+                        <div class="mouth talking"></div>
+                    </div>
+                    <div class="speech-indicator">Speaking...</div>
+                </div>
+
+                <!-- Progress bar -->
+                <div class="controls">
+                    <div class="progress-bar">
+                        <div class="progress"></div>
+                    </div>
+                    <div class="control-buttons">
+                        <button class="play-btn">▶</button>
+                        <span class="time">0:00 / 10:00</span>
+                        <button class="volume-btn">🔊</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video info -->
+            <div class="video-info">
+                <h1 class="video-title">An Important Message About...</h1>
+                <div class="video-stats">
+                    <span class="views">1,337,420 views</span>
+                    <span class="date">• Oct 22, 2025</span>
+                </div>
+                <div class="channel-info">
+                    <div class="channel-avatar"></div>
+                    <div class="channel-details">
+                        <span class="channel-name">TheTruthSpeaker</span>
+                        <span class="subscribers">2.4M subscribers</span>
+                    </div>
+                    <button class="subscribe-btn">SUBSCRIBE</button>
+                </div>
+            </div>
+
+            <!-- Comments section preview -->
+            <div class="comments-section">
+                <h3>Comments</h3>
+                <div class="comment-input">
+                    <div class="user-avatar"></div>
+                    <input type="text" placeholder="Add a comment...">
+                </div>
+            </div>
+        </div>
+
+        <!-- Pop-up comments container -->
+        <div id="popupComments"></div>
+
+        <!-- Interruption overlay -->
+        <div id="interruptions"></div>
+
+        <!-- Notification sounds indicator -->
+        <div class="sound-indicator">🔔</div>
+        
+        <!-- Queue indicator -->
+        <div class="queue-indicator">
+            <span class="queue-label">Waiting:</span>
+            <span class="queue-count">0</span>
+        </div>
+    </div>
+
+    <div class="art-info">
+        <h2>UnderIM</h2>
+        <p>An exploration of digital attention and the fractured experience of online media consumption</p>
+        <p style="margin-top: 10px; font-size: 12px; color: #666;">
+            Pattern: 3 quick comments → 1 long interruption (6-7s) → Repeat
+        </p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
